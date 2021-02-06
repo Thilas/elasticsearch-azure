@@ -5,7 +5,7 @@ ElasticSearch docker container that supports [Azure Container Instances](https:/
 Basically it overrides the [official container](https://www.docker.elastic.co/r/elasticsearch) and allows to set [ElasticSearch configuration variables](https://www.elastic.co/guide/en/elasticsearch/reference/master/settings.html) that contains dots (`.`) by replacing them with triple underscore (`___`). Example: `discovery___type=single-node` instead of `discovery.type=single-node`.
 
 [![Build](https://github.com/Thilas/elasticsearch-azure/workflows/Build/badge.svg)](https://github.com/Thilas/elasticsearch-azure/actions?query=workflow%3ABuild)
-[![Docker Version](https://img.shields.io/docker/v/thilas/elasticsearch-azure/latest?logo=docker) ![Docker Pulls](https://img.shields.io/docker/pulls/thilas/elasticsearch-azure?color=green&label=pulls&logo=docker)](https://registry.hub.docker.com/r/thilas/elasticsearch-azure)
+[![Docker Version](https://img.shields.io/docker/v/thilas/elasticsearch-azure?logo=docker) ![Docker Pulls](https://img.shields.io/docker/pulls/thilas/elasticsearch-azure?color=green&label=pulls&logo=docker)](https://registry.hub.docker.com/r/thilas/elasticsearch-azure)
 
 ## Usage
 

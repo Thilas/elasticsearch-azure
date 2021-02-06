@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Build image for $VERSION
+      - name: Build image for ${{ github.event.inputs.version }}
         run: docker build --build-arg "VERSION=$VERSION" --tag "$IMAGE_NAME" .
 
       - name: Log into GitHub Container Registry
