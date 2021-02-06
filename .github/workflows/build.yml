@@ -1,0 +1,54 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: ElasticSearch version
+        required: true
+
+env:
+  CONTAINER_REGISTRY: docker.pkg.github.com
+  DOCKERHUB_USER: thilas
+  IMAGE_NAME: elasticsearch-azure
+  VERSION: ${{ github.event.inputs.version }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Bump version
+        run: |
+          echo "VERSION: $VERSION"
+
+      - name: Build image
+        run: docker build --build-arg "VERSION=$VERSION" --tag "$IMAGE_NAME" .
+
+      - name: Log into GitHub Container Registry
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }} # Secret PAT with `read:packages` and `write:packages` scopes
+        run: echo "$CR_PAT" | docker login "$CONTAINER_REGISTRY" --username "$GITHUB_ACTOR" --password-stdin
+
+      - name: Push image to GitHub Container Registry
+        run: |
+          # Change all uppercase to lowercase
+          IMAGE_ID="$(echo "$CONTAINER_REGISTRY/$GITHUB_REPOSITORY" | tr '[A-Z]' '[a-z]')/$IMAGE_NAME"
+          docker tag "$IMAGE_NAME" "$IMAGE_ID:$VERSION"
+          docker push "$IMAGE_ID:$VERSION"
+
+      - name: Log into Docker Hub
+        env:
+          DH_PAT: ${{ secrets.DH_PAT }}
+        run: echo "$DH_PAT" | docker login --username "$DOCKERHUB_USER" --password-stdin
+
+      - name: Push image to Docker Hub
+        run: |
+          IMAGE_ID="$DOCKERHUB_USER/$IMAGE_NAME"
+          docker tag "$IMAGE_NAME" "$IMAGE_ID:$VERSION"
+          docker push "$IMAGE_ID:$VERSION"
