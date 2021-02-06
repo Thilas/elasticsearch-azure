@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: Build v${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Build image for ${{ github.event.inputs.version }}
+      - name: Build image
         run: docker build --build-arg "VERSION=$VERSION" --tag "$IMAGE_NAME" .
 
       - name: Log into GitHub Container Registry
